@@ -14,12 +14,12 @@ public abstract class Kontener
         double konWeight, double depth, 
         char type, double maxWeight)
     {
-        this.goodsWeight = 0;
+        goodsWeight = 0;
         this.height = height;
         this.konWeight = konWeight;
         this.depth = depth;
         this.maxWeight = maxWeight;
-        this.serialNumber = SerialNumbers.generateSerialNumber(type);
+        serialNumber = SerialNumbers.generateSerialNumber(type);
     }
 
     public void show()

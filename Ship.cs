@@ -54,38 +54,51 @@ public class Ship
         return true;
     }
     
-    public bool removeContainer(string serial)
+    public void removeContainer(string serial)
     {
         var kontener = kontenery.FirstOrDefault(k => k.serialNumber == serial);
-        if (kontener == null) return false;
+        if (kontener == null)
+        {
+            Console.WriteLine("\nNie znaleziono kontenera: " + serial + " !!!!");
+            return;
+        }
+        
         kontenery.Remove(kontener);
-        Console.WriteLine($"Usunięto kontener {serial}");
-        return true;
+        Console.WriteLine("\nUsunięto kontener " + serial);
+
     }
     
-    public bool ReplaceContainer(string serialToReplace, Kontener newContainer)
+    public void ReplaceContainer(string konToReplace, Kontener newContainer)
     {
-        int index = kontenery.FindIndex(k => k.serialNumber == serialToReplace);
-        if (index == -1) return false;
+        int index = kontenery.FindIndex(k => k.serialNumber == konToReplace);
+        if (index == -1)
+        {
+            Console.WriteLine("\nNie znaleziono kontenera, którego chcieliśmy zastąpić: " + konToReplace);
+            return;
+        }
 
         kontenery[index] = newContainer;
-        Console.WriteLine($"Zastąpiono kontener {serialToReplace} nowym {newContainer.serialNumber}");
-        return true;
+        Console.WriteLine("\nZastąpiono kontener " +  konToReplace + " nowym " + newContainer.serialNumber);
     }
 
-    public bool moveKontener(string serial, Ship target)
+    public void moveKontener(string serial, Ship target)
     {
         var kontener = kontenery.FirstOrDefault(k => k.serialNumber == serial);
-        
-        if (kontener == null) return false;
 
+        if (kontener == null)
+        {
+            Console.WriteLine("Brak takiego kontenera " + serial);
+            return;
+        }
         if (target.addKontener(kontener))
         {
             kontenery.Remove(kontener);
             Console.WriteLine("Przeniesiono kontener " + serial + " na statek " + target.name);
-            return true;
         }
-        return false;
+        else
+        {
+            Console.WriteLine("Błąd w trakcie przenoszenia kontenera " + serial + " na statek " + target.name);
+        }
     }
 
     public void show(string serial)
@@ -100,12 +113,14 @@ public class Ship
         Console.WriteLine("\nInformacje o statku: " +
                           "\nNazwa: " + name +
                           "\nLiczba kontenerów: " + kontenery.Count +
-                          "\nPrędkość maksymalna: " + maxKontenerNumber + $" węzłów");
-        Console.WriteLine($"Łączna masa: {kontenery.Sum(k => k.goodsWeight + k.konWeight)} kg / {maxShipWeight * 1000} kg");
+                          "\nPrędkość maksymalna: " + maxKontenerNumber + " węzłów" + 
+                          "\nMaksymalna waga wszystkich kontenerów, które mogą być transportowane: " + maxShipWeight + " ton");
+        Console.WriteLine("Łączna masa: " + kontenery.Sum(k => k.goodsWeight + k.konWeight) + " kg / " + maxShipWeight*1000 + " kg");
+        //^^Musimy tutaj pomnożyć wartość maxShipWeight * 1000 żeby nam zgadzały się jednostki
 
         foreach (var i in kontenery)
         {
-            Console.WriteLine($" {i.serialNumber}: ({i.goodsWeight + i.konWeight} kg)");
+            Console.WriteLine(i.serialNumber + " : " + (i.goodsWeight + i.konWeight) + " kg");
         }
     }
 }
